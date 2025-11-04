@@ -1,0 +1,40 @@
+/* styles.css - Catálogo de Cursos (Sistemas) */
+:root{
+  --bg:#0f1724;
+  --card:#0b1220;
+  --accent:#0ea5a4;
+  --muted:#94a3b8;
+  --glass: rgba(255,255,255,0.03);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#071021 0%,#071425 60%);color:#e6eef6}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.site-header{padding:28px 0 8px}
+.title{margin:0;font-size:28px;letter-spacing:0.4px}
+.subtitle{margin:6px 0 0;color:var(--muted)}
+.main{padding:18px 0}
+.controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:18px}
+.search{flex:1;min-width:220px;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:var(--glass);color:inherit;outline:none;transition:box-shadow .18s,transform .12s}
+.search:focus{box-shadow:0 6px 18px rgba(14,165,164,0.12);transform:translateY(-2px)}
+.page-size{display:flex;gap:8px;align-items:center;color:var(--muted)}
+.page-size select{padding:8px;border-radius:8px;background:#06111a;border:1px solid rgba(255,255,255,0.04);color:inherit}
+.catalog{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);padding:16px;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;gap:10px;transform-origin:center;transition:transform .28s cubic-bezier(.2,.9,.2,1),box-shadow .2s}
+.card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 12px 30px rgba(2,6,23,0.6)}
+.card h3{margin:0;font-size:18px}
+.card p{margin:0;color:var(--muted);font-size:13px}
+.meta{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.tag{padding:6px 8px;border-radius:999px;background:rgba(14,165,164,0.12);color:var(--accent);font-weight:600;font-size:12px}
+.actions{margin-top:auto;display:flex;justify-content:space-between;gap:8px}
+.btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;cursor:pointer}
+.btn.primary{background:linear-gradient(90deg,var(--accent),#06b6b5);color:#052022;border:none}
+.pagination{display:flex;gap:8px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.page-btn{padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted)}
+.page-btn.active{background:var(--accent);color:#042022;border:none;transform:translateY(-2px)}
+.empty{padding:40px;border-radius:12px;background:rgba(255,255,255,0.02);text-align:center;color:var(--muted)}
+.fade-in{animation:fadeIn .4s ease both}
+.slide-up{animation:slideUp .45s cubic-bezier(.2,.9,.2,1) both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.site-footer{padding:18px 0;color:var(--muted);text-align:center}
+@media (max-width:520px){.title{font-size:20px}.controls{gap:8px}}
