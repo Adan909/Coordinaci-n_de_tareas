@@ -2,7 +2,7 @@
 
 Esta es una mini-aplicación web desarrollada como parte del "Caso Práctico – Revisión grupal de cronogramas y seguimiento".
 
-El objetivo de este artefacto es servir como un entregable simple para practicar la coordinación, el seguimiento de tareas y la validación del "Definition of Done" (DoD).
+El objetivo de este artefacto es servir como un entregable simple para practicar la coordinación y el seguimiento de tareas.
 
 
 
