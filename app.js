@@ -38,6 +38,15 @@ function debounce(fn, wait){
   }
 }
 
+// Announcer helper for screen readers
+function announce(message){
+  const el = document.getElementById('announcer');
+  if(!el) return;
+  // clear then set to ensure screen readers detect change
+  el.textContent = '';
+  setTimeout(()=>{ el.textContent = message; }, 50);
+}
+
 function filterCourses(query){
   if(!query) return courses.slice();
   const q = query.toLowerCase().trim();
@@ -64,6 +73,7 @@ function renderCatalog(){
     empty.textContent = 'No se encontraron cursos que coincidan con la búsqueda.';
     catalogEl.appendChild(empty);
     paginationEl.innerHTML = '';
+    announce('No se encontraron cursos que coincidan con la búsqueda.');
     return;
   }
 
@@ -89,6 +99,16 @@ function renderCatalog(){
   });
 
   renderPagination(pages);
+
+  // announce the current view for screen reader users
+  announce(`Mostrando ${data.length} de ${total} cursos. Página ${state.currentPage} de ${pages}.`);
+
+  // Move keyboard focus to the first action in the catalog for smoother keyboard navigation
+  const firstAction = catalogEl.querySelector('.actions .btn');
+  if(firstAction){
+    firstAction.setAttribute('tabindex','0');
+    firstAction.focus({preventScroll:true});
+  }
 }
 
 function renderPagination(totalPages){
@@ -113,6 +133,7 @@ function renderPagination(totalPages){
   prev.className = 'page-btn';
   prev.textContent = '«';
   prev.onclick = ()=>{ if(state.currentPage>1){ state.currentPage--; renderCatalog(); window.scrollTo({top:0,behavior:'smooth'}); } };
+  prev.setAttribute('type','button');
   paginationEl.appendChild(prev);
 
   for(let i=1;i<=totalPages;i++){
@@ -123,6 +144,7 @@ function renderPagination(totalPages){
   next.className = 'page-btn';
   next.textContent = '»';
   next.onclick = ()=>{ if(state.currentPage<totalPages){ state.currentPage++; renderCatalog(); window.scrollTo({top:0,behavior:'smooth'}); } };
+  next.setAttribute('type','button');
   paginationEl.appendChild(next);
 }
 
@@ -139,6 +161,7 @@ perPageSelect.addEventListener('change', (e)=>{
   state.perPage = Number(e.target.value);
   state.currentPage = 1;
   renderCatalog();
+  announce(`Se mostrarán ${state.perPage} cursos por página.`);
 });
 
 // Initial render
@@ -147,3 +170,69 @@ renderCatalog();
 
 // Expose for debugging
 window._catalogState = state;
+
+// Theme (modo claro/oscuro) - toggle + persistencia
+(function(){
+  const THEME_KEY = 'site-theme';
+  const toggleBtn = document.getElementById('theme-toggle');
+  if(!toggleBtn) return;
+
+  function applyTheme(theme){
+    // Use class toggles and CSS to animate SVG icons; avoid manipulating textContent
+    if(theme === 'light'){
+      document.documentElement.setAttribute('data-theme','light');
+      toggleBtn.classList.add('is-light');
+      toggleBtn.setAttribute('aria-pressed','true');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      toggleBtn.classList.remove('is-light');
+      toggleBtn.setAttribute('aria-pressed','false');
+    }
+  }
+
+  // initialize from localStorage or system preference
+  const saved = localStorage.getItem(THEME_KEY);
+  if(saved){
+    applyTheme(saved);
+  } else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches){
+    applyTheme('light');
+  } else {
+    applyTheme('dark');
+  }
+
+  toggleBtn.addEventListener('click', ()=>{
+    const currentIsLight = document.documentElement.getAttribute('data-theme') === 'light';
+    const next = currentIsLight ? 'dark' : 'light';
+    applyTheme(next);
+    localStorage.setItem(THEME_KEY, next);
+    // small tactile feedback via aria-live could be added if desired
+    announce(next === 'light' ? 'Tema claro activado' : 'Tema oscuro activado');
+  });
+})();
+
+// Keyboard shortcuts for pagination (Left/Right) and accessibility niceties
+document.addEventListener('keydown', (e)=>{
+  // Ignore when focus is on an input or editable element
+  const tag = document.activeElement && document.activeElement.tagName;
+  if(tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable) return;
+
+  if(e.key === 'ArrowLeft'){
+    if(state.currentPage > 1){ state.currentPage--; renderCatalog(); window.scrollTo({top:0,behavior:'smooth'}); }
+  } else if(e.key === 'ArrowRight'){
+    // try to compute total pages from filtered list
+    const pages = Math.max(1, Math.ceil(state.filtered.length / state.perPage));
+    if(state.currentPage < pages){ state.currentPage++; renderCatalog(); window.scrollTo({top:0,behavior:'smooth'}); }
+  }
+});
+
+// Delegate click events inside catalog for Details/Inscribirse to provide announcements
+catalogEl.addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  const card = e.target.closest('.card');
+  const title = card ? card.querySelector('h3')?.textContent : '';
+  if(btn.textContent && title){
+    const action = btn.textContent.trim();
+    announce(`${action} — ${title}`);
+  }
+});

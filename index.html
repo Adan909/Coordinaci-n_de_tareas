@@ -3,18 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Catálogo de cursos para la carrera de Sistemas: redes, seguridad, bases de datos, virtualización y más.">
     <title>Catálogo de Cursos - Sistemas</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <a class="skip-link" href="#catalog">Saltar al catálogo</a>
     <header class="site-header">
         <div class="container">
             <h1 class="title">Catálogo de Cursos — Sistemas</h1>
-            
+            <button id="theme-toggle" class="theme-toggle" aria-label="Alternar modo claro/oscuro" title="Alternar modo claro/oscuro" aria-pressed="false">
+                <span class="icon" aria-hidden="true">
+                    <!-- Moon icon -->
+                    <svg class="icon-svg moon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" fill="currentColor"/>
+                    </svg>
+                    <!-- Sun icon -->
+                    <svg class="icon-svg sun" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                        <circle cx="12" cy="12" r="4" fill="currentColor"/>
+                        <g stroke="currentColor" stroke-width="1.2" stroke-linecap="round">
+                            <path d="M12 2v2"/>
+                            <path d="M12 20v2"/>
+                            <path d="M4.93 4.93l1.41 1.41"/>
+                            <path d="M17.66 17.66l1.41 1.41"/>
+                            <path d="M2 12h2"/>
+                            <path d="M20 12h2"/>
+                            <path d="M4.93 19.07l1.41-1.41"/>
+                            <path d="M17.66 6.34l1.41-1.41"/>
+                        </g>
+                    </svg>
+                </span>
+                <span class="visually-hidden">Alternar tema</span>
+            </button>
         </div>
     </header>
 
-    <main class="container main">
+    <main class="container main" id="main" role="main">
         <section class="controls">
             <input id="searchInput" class="search" type="search" placeholder="Buscar cursos (ej. redes, bases, seguridad)..." aria-label="Buscar cursos">
             <div class="page-size">
@@ -27,9 +51,12 @@
             </div>
         </section>
 
-        <section id="catalog" class="catalog" aria-live="polite">
+        <section id="catalog" class="catalog" aria-live="polite" aria-label="Listado de cursos">
             <!-- Course cards rendered here -->
         </section>
+
+        <!-- Announcer para lectores de pantalla; usado por JS para actualizaciones contextuales -->
+        <div id="announcer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
 
         <nav id="pagination" class="pagination" aria-label="Paginación">
             <!-- Pagination buttons rendered here -->

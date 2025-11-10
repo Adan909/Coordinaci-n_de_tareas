@@ -1,13 +1,40 @@
 /* styles.css - Catálogo de Cursos (Sistemas) */
 :root{
-  --bg:#0f1724;
-  --card:#0b1220;
-  --accent:#0ea5a4;
-  --muted:#94a3b8;
+  /* Dark / default theme variables */
+  --bg-1: #071021;
+  --bg-2: #071425;
+  --card: #0b1220;
+  --card-border: rgba(255,255,255,0.04);
+  --accent: #0ea5a4;
+  --muted: #94a3b8;
   --glass: rgba(255,255,255,0.03);
+  --form-bg: #06111a;
+  --text: #e6eef6;
+  --footer-height: 64px; /* default footer height, used to reserve space */
+}
+
+/* Light theme overrides when [data-theme="light"] is set on <html> */
+[data-theme="light"]{
+  --bg-1: #f6fafb;
+  --bg-2: #eef6f6;
+  --card: #ffffff;
+  --card-border: rgba(2,6,23,0.06);
+  --accent: #0ea5a4;
+  --muted: #556070;
+  --glass: rgba(2,6,23,0.03);
+  --form-bg: #ffffff;
+  --text: #0b1220;
 }
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,#071021 0%,#071425 60%);color:#e6eef6}
+html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Arial,Helvetica,sans-serif;background:linear-gradient(180deg,var(--bg-1) 0%,var(--bg-2) 60%);color:var(--text)}
+
+/* Skip link visible when focused for keyboard users */
+.skip-link{position:absolute;left:8px;top:8px;background:var(--card);color:var(--text);padding:8px 12px;border-radius:8px;border:1px solid var(--card-border);transform:translateY(-120%);transition:transform .18s ease,opacity .18s;opacity:0;z-index:999}
+.skip-link:focus{transform:translateY(0);opacity:1;outline:none;box-shadow:0 6px 18px rgba(2,6,23,0.2)}
+
+/* Layout: make body a column so footer sits at bottom when content is short,
+   and is pushed down (page scrolls) when content is long. */
+body{min-height:100vh;display:flex;flex-direction:column}
 .container{max-width:1100px;margin:0 auto;padding:24px}
 .site-header{padding:28px 0 8px}
 .title{margin:0;font-size:28px;letter-spacing:0.4px}
@@ -17,9 +44,33 @@ html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Arial,Helvetica,sans-s
 .search{flex:1;min-width:220px;padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:var(--glass);color:inherit;outline:none;transition:box-shadow .18s,transform .12s}
 .search:focus{box-shadow:0 6px 18px rgba(14,165,164,0.12);transform:translateY(-2px)}
 .page-size{display:flex;gap:8px;align-items:center;color:var(--muted)}
-.page-size select{padding:8px;border-radius:8px;background:#06111a;border:1px solid rgba(255,255,255,0.04);color:inherit}
-.catalog{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);padding:16px;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;gap:10px;transform-origin:center;transition:transform .28s cubic-bezier(.2,.9,.2,1),box-shadow .2s}
+.page-size select{padding:8px;border-radius:8px;background:var(--form-bg);border:1px solid var(--card-border);color:inherit}
+.catalog{
+  /* Grid layout with a maximum of 4 columns. This produces up to two rows
+     naturally when the per-page limit is 8 (4 por línea). The grid centers
+     itself so shorter last rows look balanced. */
+  display:grid;
+  grid-template-columns: repeat(4, minmax(220px, 1fr));
+  gap:16px;
+  padding:12px 6px;
+  align-items:start;
+  justify-content:center; /* center grid when there are fewer items */
+}
+
+/* Ensure cards fill the grid column width */
+.catalog .card{width:100%;height:auto}
+
+/* Responsive: fewer columns on smaller viewports */
+@media (max-width:1000px){
+  .catalog{grid-template-columns:repeat(3,minmax(200px,1fr))}
+}
+@media (max-width:720px){
+  .catalog{grid-template-columns:repeat(2,minmax(180px,1fr))}
+}
+@media (max-width:420px){
+  .catalog{grid-template-columns:1fr}
+}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));background-color:var(--card);border:1px solid var(--card-border);padding:16px;border-radius:12px;overflow:hidden;display:flex;flex-direction:column;gap:10px;transform-origin:center;transition:transform .28s cubic-bezier(.2,.9,.2,1),box-shadow .2s}
 .card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 12px 30px rgba(2,6,23,0.6)}
 .card h3{margin:0;font-size:18px}
 .card p{margin:0;color:var(--muted);font-size:13px}
@@ -28,13 +79,75 @@ html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Arial,Helvetica,sans-s
 .actions{margin-top:auto;display:flex;justify-content:space-between;gap:8px}
 .btn{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit;cursor:pointer}
 .btn.primary{background:linear-gradient(90deg,var(--accent),#06b6b5);color:#052022;border:none}
+.btn:focus-visible, .page-btn:focus-visible{outline:3px solid rgba(14,165,164,0.18);outline-offset:3px;border-color:transparent}
+.btn:focus{box-shadow:0 8px 24px rgba(14,165,164,0.06)}
 .pagination{display:flex;gap:8px;justify-content:center;margin-top:20px;flex-wrap:wrap}
 .page-btn{padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted)}
 .page-btn.active{background:var(--accent);color:#042022;border:none;transform:translateY(-2px)}
+
+/* make pagination buttons easier to hit on touch and keyboard */
+.page-btn{min-width:44px}
+
+/* Theme toggle button */
+.theme-toggle{margin-left:12px;display:inline-flex;align-items:center;justify-content:center;gap:8px;width:44px;height:44px;padding:6px;border-radius:999px;border:1px solid var(--card-border);background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));background-color:var(--card);color:var(--text);cursor:pointer;font-size:18px;transition:transform .18s ease,box-shadow .18s ease,background-color .25s ease}
+.theme-toggle:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 8px 24px rgba(14,165,164,0.08)}
+
+/* glowing ring when light theme active */
+.theme-toggle.is-light{box-shadow:0 8px 30px rgba(14,165,164,0.14);border-color:transparent}
+.theme-toggle.is-light::before{content:'';position:absolute;inset:0;border-radius:999px;padding:2px;pointer-events:none;box-shadow:0 0 30px rgba(14,165,164,0.14)}
+
+.theme-toggle:focus{outline:none;box-shadow:0 0 0 3px rgba(14,165,164,0.08)}
+
+.theme-toggle .icon{display:inline-block;line-height:1;transition:transform .45s cubic-bezier(.2,.9,.2,1),opacity .25s ease}
+.theme-toggle.is-light .icon{transform:rotate(40deg) scale(1.12);opacity:1}
+.theme-toggle:not(.is-light) .icon{transform:rotate(0) scale(1);}
+
+/* reduce motion respect */
+@media (prefers-reduced-motion: reduce){
+  .theme-toggle,.theme-toggle .icon{transition:none}
+}
+
+/* visually hidden utility for accessibility */
+.visually-hidden{position:absolute;border:0;padding:0;width:1px;height:1px;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* SVG icon styling and animation */
+.theme-toggle{position:relative}
+.theme-toggle .icon{width:24px;height:24px;display:inline-block;position:relative}
+.theme-toggle .icon-svg{position:absolute;inset:0;width:100%;height:100%;display:block;fill:currentColor;color:var(--text);transition:transform .45s cubic-bezier(.2,.9,.2,1),opacity .28s ease}
+.theme-toggle .icon-svg.sun{opacity:0;transform:rotate(-10deg) scale(.8)}
+.theme-toggle .icon-svg.moon{opacity:1;transform:rotate(0) scale(1)}
+.theme-toggle.is-light .icon-svg.sun{opacity:1;transform:rotate(20deg) scale(1)}
+.theme-toggle.is-light .icon-svg.moon{opacity:0;transform:rotate(-30deg) scale(.6)}
+
+/* slightly enlarge sun when active */
+.theme-toggle.is-light{transform:translateY(-4px) scale(1.04)}
+
+/* decrease icon contrast in light theme to match design */
+[data-theme="light"] .theme-toggle .icon-svg{color:#0b615f}
 .empty{padding:40px;border-radius:12px;background:rgba(255,255,255,0.02);text-align:center;color:var(--muted)}
 .fade-in{animation:fadeIn .4s ease both}
 .slide-up{animation:slideUp .45s cubic-bezier(.2,.9,.2,1) both}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.site-footer{padding:18px 0;color:var(--muted);text-align:center}
+.site-footer{
+  /* not fixed: participate in document flow so page can scroll naturally */
+  position:relative;
+  height:var(--footer-height);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--card);
+  border-top:1px solid var(--card-border);
+  color:var(--muted);
+  text-align:center;
+  z-index:40;
+}
+
+/* Ensure main grows to fill available space so footer stays at bottom on short pages */
+.main{flex:1}
 @media (max-width:520px){.title{font-size:20px}.controls{gap:8px}}
+
+@media (max-width:420px){
+  :root{--footer-height:56px}
+  .theme-toggle{width:40px;height:40px}
+}
