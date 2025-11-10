@@ -24,7 +24,7 @@ El objetivo de este artefacto es servir como un entregable simple para practicar
 
 ## Cómo Ejecutar el Proyecto
 
-Este es un proyecto web estático (Vanilla JS, HTML, CSS). No requiere un proceso de compilación ni dependencias complejas.
+Este es un proyecto web estático (JS, HTML, CSS). No requiere un proceso de compilación ni dependencias complejas.
 
 La forma más sencilla de ejecutarlo es:
 
