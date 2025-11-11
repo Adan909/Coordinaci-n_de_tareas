@@ -1,3 +1,4 @@
+// codigo generado por copilot
 // app.js - catálogo de cursos (Sistemas)
 
 const courses = [

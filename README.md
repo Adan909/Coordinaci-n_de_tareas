@@ -8,13 +8,13 @@ El objetivo de este artefacto es servir como un entregable simple para practicar
 
 ---
 
-## Equipo 
+## Equipo y rol
 
-* Diego Roberto Corrales Espinoza
-* Jhesly Lisseth Castillo Martinez
-* Dannia María Pérez Rivera
-* Victor Mateo Alcócer López
-* Jorge Adán Ortega Torres
+* Diego Roberto Corrales Espinoza: Planificador de actividades
+* Jhesly Lisseth Castillo Martinez: Gestor de evidencia
+* Dannia María Pérez Rivera: Documentadora 
+* Victor Mateo Alcócer López: Desarrollador principal
+* Jorge Adán Ortega Torres: Lider
 
 ## Docente
 
